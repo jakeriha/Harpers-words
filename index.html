@@ -398,15 +398,92 @@
     color: var(--purple); padding: 10px 28px; cursor: pointer;
     transition: background 0.2s; margin-bottom: 20px;
   }
+  /* PRACTICE MODE TOGGLE */
+  .practice-mode-toggle {
+    display: flex; gap: 8px; width: 100%; margin-bottom: 12px;
+  }
+  .pmode-btn {
+    flex: 1; padding: 10px 8px; border-radius: 16px;
+    border: 3px solid rgba(155,89,182,0.2);
+    background: rgba(255,255,255,0.6);
+    font-family: 'Fredoka One', cursive; font-size: 0.95rem;
+    color: #bbb; cursor: pointer; transition: all 0.2s;
+  }
+  .pmode-btn.active {
+    border-color: var(--purple);
+    background: linear-gradient(145deg, #f3e5f5, #fce4ec);
+    color: var(--purple); box-shadow: 0 3px 10px rgba(155,89,182,0.2);
+  }
+
+  /* LISTEN & FIND PROMPT */
+  .find-prompt-wrap {
+    width: 100%; background: rgba(255,255,255,0.75);
+    border-radius: 22px; padding: 16px;
+    text-align: center; margin-bottom: 12px;
+    box-shadow: 0 4px 16px rgba(233,30,140,0.12);
+    border: 3px solid rgba(233,30,140,0.15);
+  }
+  .find-prompt-label {
+    font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 0.9rem; color: #aaa; margin-bottom: 8px;
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .find-listening-icon {
+    font-size: 3rem; margin-bottom: 10px;
+    animation: speakPulse 0.8s ease-in-out infinite alternate;
+  }
+  .find-listening-icon.idle { animation: none; opacity: 0.4; }
+  .find-say-again {
+    background: linear-gradient(145deg, #fce4ec, #f8bbd0);
+    border: 2px solid rgba(233,30,140,0.25); border-radius: 14px;
+    font-family: 'Fredoka One', cursive; font-size: 0.9rem;
+    color: #c2185b; padding: 6px 16px; cursor: pointer;
+    transition: transform 0.12s;
+  }
+  .find-say-again:active { transform: scale(0.95); }
+
+  /* Wrong tap shake in find mode */
+  .word-bubble.wrong-tap {
+    animation: wrongFlash 0.4s ease;
+    border-color: var(--red) !important;
+  }
+
+  /* PRACTICE SUMMARY */
+  .practice-summary {
+    width: 100%; background: rgba(255,255,255,0.75);
+    border-radius: 16px; padding: 14px 16px; margin-bottom: 12px;
+    box-shadow: 0 2px 10px rgba(155,89,182,0.1);
+    animation: slideDown 0.4s ease;
+  }
+
   .reset-practice-btn:active { background: rgba(155,89,182,0.12); }
 
-  /* PRACTICE SECTION LABELS */
   .practice-section-label {
     width: 100%; font-family: 'Fredoka One', cursive; font-size: 1rem;
     color: var(--purple); margin-bottom: 8px; padding: 0 4px;
   }
   .known-label { color: var(--green); margin-top: 6px; }
+  .almost-label { color: var(--orange); margin-top: 6px; }
   .bubble-move { animation: bubblePop 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+
+  /* Almost Got It bubble styling */
+  .word-bubble.almost {
+    background: linear-gradient(135deg, #FFD93D, #FF9A3C);
+    color: white; border-color: transparent;
+    box-shadow: 0 4px 16px rgba(255,179,0,0.35);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  /* Practice Tricky Words button */
+  .btn-tricky {
+    width: 100%; padding: 14px; border-radius: 18px; border: none;
+    background: linear-gradient(145deg, #FF6B9D, #E91E8C);
+    font-family: 'Fredoka One', cursive; font-size: 1.1rem;
+    color: white; cursor: pointer; margin-top: 10px;
+    box-shadow: 0 5px 0 rgba(233,30,140,0.3);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .btn-tricky:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(233,30,140,0.3); }
 
   /* SESSION SUMMARY */
   .summary-box {
@@ -620,16 +697,54 @@ play</textarea>
       </div>
       <button class="edit-btn" onclick="confirmGoHome()">🏠 Home</button>
     </div>
+
+    <!-- Mode switcher -->
+    <div class="practice-mode-toggle">
+      <button class="pmode-btn" id="pmodeTap" onclick="setPracticeMode('tap')">
+        👆 Tap to Hear
+      </button>
+      <button class="pmode-btn active" id="pmodeFind" onclick="setPracticeMode('find')">
+        🔊 Listen & Find
+      </button>
+    </div>
+
+    <!-- Listen & Find prompt — only shown in find mode -->
+    <div class="find-prompt-wrap" id="findPromptWrap" style="display:none">
+      <div class="find-prompt-label">Listen carefully...</div>
+      <div class="find-listening-icon" id="findListeningIcon">🔊</div>
+      <button class="find-say-again" onclick="sayCurrentFindWord()">🔊 Say it again</button>
+    </div>
+
     <div class="unicorn-parade-wrap">
       <div class="unicorn-parade" id="unicornParade"></div>
       <div class="practice-counter" id="practiceCounter">Tap a word to hear it! 👇</div>
     </div>
+
     <!-- Words to learn -->
-    <div class="practice-section-label" id="toLabelEl">Words to Learn 📖</div>
+    <div class="practice-section-label" id="toLabelEl" style="display:none">📖 Words to Learn</div>
     <div class="bubble-grid" id="bubbleGrid"></div>
+    <!-- Almost got it -->
+    <div class="practice-section-label almost-label" id="almostLabelEl" style="display:none">🤔 Almost Got It</div>
+    <div class="bubble-grid" id="almostGrid"></div>
     <!-- Words I know -->
-    <div class="practice-section-label known-label" id="knownLabelEl" style="display:none">Words I Know ⭐</div>
+    <div class="practice-section-label known-label" id="knownLabelEl" style="display:none">⭐ Words I Know</div>
     <div class="bubble-grid" id="knownGrid"></div>
+
+    <!-- Practice summary — shown when all words found -->
+    <div class="practice-summary" id="practiceSummary" style="display:none">
+      <div class="summary-title">📋 Session Summary</div>
+      <div class="summary-row" id="pSummaryPerfect" style="display:none">
+        <span class="summary-label got">⭐ Perfect — got them all first try!</span>
+      </div>
+      <div class="summary-row" id="pSummaryStruggled" style="display:none">
+        <span class="summary-label hard">🔁 Keep practicing these</span>
+        <div class="summary-words" id="pSummaryStruggledWords"></div>
+      </div>
+      <button class="btn-tricky" id="practiceTrickyBtn" onclick="practiceTrickyWords()" style="display:none">
+        🔁 Practice Tricky Words
+      </button>
+    </div>
+
     <button class="reset-practice-btn" onclick="resetPractice()">🔄 Start Fresh</button>
   </div>
 
@@ -648,8 +763,12 @@ let isListening = false;
 let listenMode = 'auto';
 let streak = 0;
 let practiceVisited = new Set();
+let practiceAlmost = new Set(); // got it right but only after wrong answers
 let practiceCelebrated = false;
 let lastUnicornCount = 0;
+let fullWordList = []; // always holds the complete word list
+let findTargetIdx = -1;
+let findWrongWords = new Set(); // words she got wrong in find mode
 
 // ─── Session tracking ─────────────────────────────────
 let sessionCorrect = [];
@@ -1139,52 +1258,186 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 function startPractice() {
   const parsed=parseWords(); if(!parsed) return;
-  words=parsed; practiceVisited=new Set();
-  practiceCelebrated=false; lastUnicornCount=0;
+  words=parsed; fullWordList=parsed.slice(); // save full list
+  practiceCelebrated=false; lastUnicornCount=0; findTargetIdx=-1;
   buildBubbleGrid(); updateParade();
+  setPracticeMode('find');
   showScreen('practiceScreen');
+}
+function setPracticeMode(mode) {
+  practiceMode=mode;
+  document.getElementById('pmodeTap').classList.toggle('active', mode==='tap');
+  document.getElementById('pmodeFind').classList.toggle('active', mode==='find');
+  const findWrap=document.getElementById('findPromptWrap');
+  const counter=document.getElementById('practiceCounter');
+  if (mode==='find') {
+    findWrap.style.display='block';
+    counter.textContent='Find the word! 👆';
+    pickNextFindWord();
+  } else {
+    findWrap.style.display='none';
+    findTargetIdx=-1;
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    counter.textContent='Tap a word to hear it! 👇';
+  }
+}
+function pickNextFindWord() {
+  const remaining = words.map((_,i)=>i).filter(i=>!practiceVisited.has(i));
+  if (remaining.length===0) return;
+  // Among remaining, prioritise words she got wrong
+  const wrongRemaining = remaining.filter(i=>findWrongWords.has(i));
+  const pool = wrongRemaining.length>0 ? wrongRemaining : remaining;
+  // Don't repeat the same word twice in a row if possible
+  const filtered = pool.filter(i=>i!==findTargetIdx);
+  findTargetIdx = (filtered.length>0 ? filtered : pool)[Math.floor(Math.random()*(filtered.length>0?filtered:pool).length)];
+  const icon=document.getElementById('findListeningIcon');
+  if (icon) { icon.textContent='🔊'; icon.classList.remove('idle'); }
+  setTimeout(()=>sayCurrentFindWord(), 400);
+}
+function sayCurrentFindWord() {
+  if (findTargetIdx===-1) return;
+  const word=words[findTargetIdx];
+  const icon=document.getElementById('findListeningIcon');
+  icon.classList.remove('idle');
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  speakText('Can you find... ' + word, 0.75, 1.05, ()=>{
+    // Go idle after speaking
+    setTimeout(()=>{ if(icon) icon.classList.add('idle'); }, 300);
+  });
 }
 function buildBubbleGrid() {
   document.getElementById('bubbleGrid').innerHTML=words.map((w,i)=>
     `<div class="word-bubble" id="bubble${i}" onclick="tapBubble(${i})">${w}</div>`
   ).join('');
+  document.getElementById('almostGrid').innerHTML='';
   document.getElementById('knownGrid').innerHTML='';
+  document.getElementById('toLabelEl').style.display='block';
+  document.getElementById('almostLabelEl').style.display='none';
   document.getElementById('knownLabelEl').style.display='none';
+  document.getElementById('practiceSummary').style.display='none';
 }
 function moveBubbleToKnown(idx) {
   const word=words[idx];
   const existing=document.getElementById('bubble'+idx);
   if (existing) existing.remove();
-  const knownLabel=document.getElementById('knownLabelEl');
-  knownLabel.style.display='block';
+  const wasWrong = findWrongWords.has(idx);
   const el=document.createElement('div');
-  el.className='word-bubble visited bubble-move';
   el.id='bubble'+idx;
-  el.onclick=()=>tapBubble(idx);
+  el.setAttribute('onclick','moveBackToLearn('+idx+')');
   el.textContent=word;
-  document.getElementById('knownGrid').appendChild(el);
+  if (wasWrong) {
+    // Almost — got it wrong first, then right
+    practiceAlmost.add(idx);
+    el.className='word-bubble almost bubble-move';
+    document.getElementById('almostLabelEl').style.display='block';
+    document.getElementById('almostGrid').appendChild(el);
+  } else {
+    // Clean correct — first try
+    el.className='word-bubble visited bubble-move';
+    document.getElementById('knownLabelEl').style.display='block';
+    document.getElementById('knownGrid').appendChild(el);
+  }
   setTimeout(()=>el.classList.remove('bubble-move'),400);
+  // Hide "to learn" label if grid is empty
+  if (document.getElementById('bubbleGrid').children.length===0) {
+    document.getElementById('toLabelEl').style.display='none';
+  }
+}
+function moveBackToLearn(idx) {
+  const existing=document.getElementById('bubble'+idx);
+  if (existing) existing.remove();
+  practiceVisited.delete(idx);
+  practiceAlmost.delete(idx);
+  findWrongWords.delete(idx);
+  // Adjust unicorn parade down if needed
+  const newUnicorns=Math.floor(practiceVisited.size/3);
+  if (newUnicorns < lastUnicornCount) {
+    lastUnicornCount=newUnicorns;
+    const parade=document.getElementById('unicornParade');
+    parade.innerHTML='';
+    for (let i=0;i<newUnicorns;i++) {
+      const span=document.createElement('span');
+      span.className='uni'; span.style.animationDelay='999s'; span.textContent='🦄';
+      parade.appendChild(span);
+    }
+  }
+  updateParade();
+  const el=document.createElement('div');
+  el.className='word-bubble bubble-move';
+  el.id='bubble'+idx;
+  el.setAttribute('onclick','tapBubble('+idx+')');
+  el.textContent=words[idx];
+  document.getElementById('bubbleGrid').appendChild(el);
+  document.getElementById('toLabelEl').style.display='block';
+  setTimeout(()=>el.classList.remove('bubble-move'),400);
+  if (document.getElementById('almostGrid').children.length===0) document.getElementById('almostLabelEl').style.display='none';
+  if (document.getElementById('knownGrid').children.length===0) document.getElementById('knownLabelEl').style.display='none';
 }
 function tapBubble(idx) {
   if (practiceCelebrated) return;
   const word=words[idx];
   const el=document.getElementById('bubble'+idx);
+
+  if (practiceMode==='find') {
+    if (idx===findTargetIdx) {
+      // ✅ Correct!
+      playCorrect();
+      // Don't remove from findWrongWords — practiceVisited handles exclusion
+      practiceVisited.add(idx);
+      updateParade();
+      // Animate icon to celebrate
+      const icon=document.getElementById('findListeningIcon');
+      if(icon){ icon.textContent='🌟'; icon.classList.remove('idle'); }
+      showFeedback('🌟','Yes!! Found it!', words[idx]+' ✓', 1000);
+      setTimeout(()=>{
+        moveBubbleToKnown(idx);
+        if(icon){ icon.textContent='🔊'; }
+      }, 600);
+      if (practiceVisited.size===words.length && !practiceCelebrated) {
+        practiceCelebrated=true;
+        setTimeout(()=>{
+          try {
+            spawnConfetti(70);
+            playCelebration(5);
+            showFeedback('🏆','All done!!','You found every word! 🦄',3000);
+          } catch(e) {}
+          setTimeout(()=>showPracticeSummary(), 1000);
+        },1200);
+      } else {
+        setTimeout(()=>pickNextFindWord(), 1400);
+      }
+    } else {
+      // ❌ Wrong — record it, shake, say again
+      playWrong();
+      findWrongWords.add(findTargetIdx); // remember this word needs more practice
+      el.classList.add('wrong-tap');
+      setTimeout(()=>el.classList.remove('wrong-tap'), 500);
+      // Show a gentle hint after the wrong sound
+      const icon=document.getElementById('findListeningIcon');
+      if(icon){ icon.textContent='👂'; icon.classList.remove('idle'); }
+      setTimeout(()=>{
+        if(icon){ icon.textContent='🔊'; }
+        sayCurrentFindWord();
+      }, 700);
+    }
+    return;
+  }
+
+  // TAP MODE — original behaviour
   window.speechSynthesis && window.speechSynthesis.cancel();
   document.querySelectorAll('.word-bubble.speaking').forEach(b=>b.classList.remove('speaking'));
   el.classList.add('speaking');
   speakText(word, 0.7, 1.05, ()=>el.classList.remove('speaking'));
-  if (!practiceVisited.has(idx)) {
-    practiceVisited.add(idx);
-    updateParade();
-    setTimeout(()=>moveBubbleToKnown(idx), 500);
-    if (practiceVisited.size===words.length && !practiceCelebrated) {
-      practiceCelebrated=true;
-      setTimeout(()=>{
-        window.speechSynthesis && window.speechSynthesis.cancel();
-        spawnConfetti(70); playCelebration(5);
-        showFeedback('🏆','All done!!','You said every word! 🦄',3000);
-      }, 900);
-    }
+  practiceVisited.add(idx);
+  updateParade();
+  setTimeout(()=>moveBubbleToKnown(idx), 500);
+  if (practiceVisited.size===words.length && !practiceCelebrated) {
+    practiceCelebrated=true;
+    setTimeout(()=>{
+      window.speechSynthesis && window.speechSynthesis.cancel();
+      spawnConfetti(70); playCelebration(5);
+      showFeedback('🏆','All done!!','You said every word! 🦄',3000);
+    }, 900);
   }
 }
 function updateParade() {
@@ -1205,10 +1458,59 @@ function updateParade() {
     counter.textContent=`${count} of ${words.length} words`+(nextIn<3?` · ${nextIn} more for a 🦄`:'');
   }
 }
+function showPracticeSummary() {
+  try {
+    const summary=document.getElementById('practiceSummary');
+    if (!summary) return;
+    summary.style.display='block';
+    const perfect=document.getElementById('pSummaryPerfect');
+    const struggled=document.getElementById('pSummaryStruggled');
+    const struggledWords=document.getElementById('pSummaryStruggledWords');
+    const trickyBtn=document.getElementById('practiceTrickyBtn');
+    if (!perfect||!struggled||!struggledWords) return;
+    if (findWrongWords.size===0) {
+      perfect.style.display='flex';
+      struggled.style.display='none';
+      if (trickyBtn) trickyBtn.style.display='none';
+    } else {
+      perfect.style.display='none';
+      struggled.style.display='flex';
+      struggledWords.innerHTML=[...findWrongWords].map(i=>`<span class="sum-chip pink">${words[i]}</span>`).join('');
+      if (trickyBtn) trickyBtn.style.display='block';
+    }
+    setTimeout(()=>summary.scrollIntoView({behavior:'smooth',block:'nearest'}),300);
+  } catch(e) { console.log('Summary error:',e); }
+}
+function practiceTrickyWords() {
+  const trickyIndices=[...findWrongWords];
+  if (trickyIndices.length===0) return;
+  // Store the tricky subset — we'll swap words array temporarily
+  const trickyWords=trickyIndices.map(i=>words[i]);
+  practiceVisited=new Set(); practiceAlmost=new Set(); findWrongWords=new Set();
+  practiceCelebrated=false; lastUnicornCount=0; findTargetIdx=-1;
+  document.getElementById('unicornParade').innerHTML='';
+  document.getElementById('practiceSummary').style.display='none';
+  // Replace words with just the tricky subset for this round
+  words=trickyWords;
+  // Rebuild grid with tricky words (re-indexed 0..n)
+  document.getElementById('bubbleGrid').innerHTML=words.map((w,i)=>
+    `<div class="word-bubble" id="bubble${i}" onclick="tapBubble(${i})">${w}</div>`
+  ).join('');
+  document.getElementById('almostGrid').innerHTML='';
+  document.getElementById('knownGrid').innerHTML='';
+  document.getElementById('toLabelEl').style.display='block';
+  document.getElementById('almostLabelEl').style.display='none';
+  document.getElementById('knownLabelEl').style.display='none';
+  updateParade();
+  setPracticeMode('find');
+}
 function resetPractice() {
-  practiceVisited=new Set(); practiceCelebrated=false; lastUnicornCount=0;
+  words = fullWordList.length > 0 ? fullWordList.slice() : (parseWords()||words);
+  practiceVisited=new Set(); practiceAlmost=new Set(); findWrongWords=new Set();
+  practiceCelebrated=false; lastUnicornCount=0; findTargetIdx=-1;
   document.getElementById('unicornParade').innerHTML='';
   buildBubbleGrid(); updateParade();
+  setPracticeMode('find');
 }
 </script>
 </body>
