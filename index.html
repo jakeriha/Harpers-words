@@ -567,23 +567,14 @@
     </div>
     <div class="edit-panel">
       <h2>This Week's Words</h2>
-      <textarea id="wordInput" placeholder="Type one word per line...">there
-like
-was
+      <textarea id="wordInput" placeholder="Type one word per line...">we
+will
 a
 the
-or
-to
-fly
-had
-and
-only
 black
-blue
-did
-not
-sleep
-play</textarea>
+with
+for
+to</textarea>
       <p class="edit-hint">One word per line. Duplicates will be removed.</p>
       <div class="mode-toggle-wrap">
         <div class="mode-label">Listening Mode</div>
@@ -915,6 +906,11 @@ function setMicUI(listening) {
 
 // ─── Phonics ─────────────────────────────────────────
 const PHONICS = {
+  'we':     [['w','w...','ww'],['e','ee','ee']],
+  'will':   [['w','w...','ww'],['i','ih','ih'],['ll','l','l']],
+  'with':   [['w','w...','ww'],['i','ih','ih'],['th','th','th']],
+  'for':    [['f','f...','f'],['or','or','or']],
+  'we':     [['w','w...','ww'],['e','ee','ee']],
   'there':  [['th','th...','th'],['ere','air','air']],
   'like':   [['l','l...','lll'],['i','eye','eye'],['ke','k','k']],
   'was':    [['w','w...','ww'],['a','uh','uh'],['s','z sound','z']],
