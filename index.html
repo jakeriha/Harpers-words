@@ -567,14 +567,19 @@
     </div>
     <div class="edit-panel">
       <h2>This Week's Words</h2>
-      <textarea id="wordInput" placeholder="Type one word per line...">we
-will
+      <textarea id="wordInput" placeholder="Type one word per line...">the
+want
+to
+how
+but
+is
+of
+buy
 a
-the
-black
-with
-for
-to</textarea>
+will
+ask
+him
+likes</textarea>
       <p class="edit-hint">One word per line. Duplicates will be removed.</p>
       <div class="mode-toggle-wrap">
         <div class="mode-label">Listening Mode</div>
@@ -906,18 +911,24 @@ function setMicUI(listening) {
 
 // ─── Phonics ─────────────────────────────────────────
 const PHONICS = {
-  'we':     [['w','w...','ww'],['e','ee','ee']],
+  'the':    [['th','th...','th'],['e','uh','uh']],
+  'want':   [['w','w...','ww'],['a','ah','ah'],['nt','nt','nt']],
+  'to':     [['t','t...','t'],['o','oo','oo']],
+  'how':    [['h','h...','h'],['ow','ow','ow']],
+  'but':    [['b','b...','b'],['u','uh','uh'],['t','t','t']],
+  'is':     [['i','ih','ih'],['s','z','z']],
+  'of':     [['o','uh','uh'],['f','v sound','v']],
+  'buy':    [['b','b...','b'],['uy','eye','eye']],
+  'a':      [['a','ay','ay']],
   'will':   [['w','w...','ww'],['i','ih','ih'],['ll','l','l']],
-  'with':   [['w','w...','ww'],['i','ih','ih'],['th','th','th']],
-  'for':    [['f','f...','f'],['or','or','or']],
-  'we':     [['w','w...','ww'],['e','ee','ee']],
+  'ask':    [['a','aa','aa'],['sk','sk','sk']],
+  'him':    [['h','h...','h'],['i','ih','ih'],['m','m','m']],
+  'likes':  [['l','l...','lll'],['i','eye','eye'],['kes','ks','ks']],
+  // legacy words kept for phonics help if still used
   'there':  [['th','th...','th'],['ere','air','air']],
   'like':   [['l','l...','lll'],['i','eye','eye'],['ke','k','k']],
   'was':    [['w','w...','ww'],['a','uh','uh'],['s','z sound','z']],
-  'a':      [['a','ay','ay']],
-  'the':    [['th','th...','th'],['e','uh','uh']],
   'or':     [['or','or','or']],
-  'to':     [['t','t...','t'],['o','oo','oo']],
   'fly':    [['fl','fl...','fl'],['y','eye','eye']],
   'had':    [['h','h...','h'],['a','ah','ah'],['d','d','d']],
   'and':    [['an','an','an'],['d','d','d']],
@@ -928,6 +939,9 @@ const PHONICS = {
   'not':    [['n','n...','n'],['o','ah','ah'],['t','t','t']],
   'sleep':  [['sl','sl...','sl'],['ee','ee','ee'],['p','p','p']],
   'play':   [['pl','pl...','pl'],['ay','ay','ay']],
+  'we':     [['w','w...','ww'],['e','ee','ee']],
+  'with':   [['w','w...','ww'],['i','ih','ih'],['th','th','th']],
+  'for':    [['f','f...','f'],['or','or','or']],
 };
 function fallbackChunks(word) {
   const vowels='aeiou', chunks=[];
