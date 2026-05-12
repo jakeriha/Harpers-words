@@ -567,21 +567,20 @@
     </div>
     <div class="edit-panel">
       <h2>This Week's Words</h2>
-      <textarea id="wordInput" placeholder="Type one word per line...">a
+      <textarea id="wordInput" placeholder="Type one word per line...">what
+is
+in
 the
-were
-on
-with
-when
-not
-his
-green
-three
-two
-play
-did
-for
-both</textarea>
+are
+there
+can
+we
+why
+it
+I
+that
+a
+of</textarea>
       <p class="edit-hint">One word per line. Duplicates will be removed.</p>
       <div class="mode-toggle-wrap">
         <div class="mode-label">Listening Mode</div>
@@ -913,8 +912,21 @@ function setMicUI(listening) {
 
 // ─── Phonics ─────────────────────────────────────────
 const PHONICS = {
-  'a':      [['a','ay','ay']],
+  'what':   [['wh','wh...','wh'],['a','uh','uh'],['t','t','t']],
+  'is':     [['i','ih','ih'],['s','z','z']],
+  'in':     [['i','ih','ih'],['n','n','n']],
   'the':    [['th','th...','th'],['e','uh','uh']],
+  'are':    [['ar','ar','ar']],
+  'there':  [['th','th...','th'],['ere','air','air']],
+  'can':    [['c','k','k'],['a','aa','aa'],['n','n','n']],
+  'we':     [['w','w...','ww'],['e','ee','ee']],
+  'why':    [['wh','wh...','wh'],['y','eye','eye']],
+  'it':     [['i','ih','ih'],['t','t','t']],
+  'i':      [['i','eye','eye']],
+  'that':   [['th','th...','th'],['a','aa','aa'],['t','t','t']],
+  'a':      [['a','ay','ay']],
+  'of':     [['o','uh','uh'],['f','v sound','v']],
+  // legacy
   'were':   [['w','w...','ww'],['ere','ur','ur']],
   'on':     [['o','ah','ah'],['n','n','n']],
   'with':   [['w','w...','ww'],['i','ih','ih'],['th','th','th']],
@@ -928,7 +940,6 @@ const PHONICS = {
   'did':    [['d','d...','d'],['i','ih','ih'],['d','d','d']],
   'for':    [['f','f...','f'],['or','or','or']],
   'both':   [['b','b...','b'],['o','oh','oh'],['th','th','th']],
-  // legacy
   'and':    [['an','an','an'],['d','d','d']],
   'went':   [['w','w...','ww'],['e','eh','eh'],['nt','nt','nt']],
   'to':     [['t','t...','t'],['o','oo','oo']],
@@ -938,19 +949,15 @@ const PHONICS = {
   'long':   [['l','l...','lll'],['o','aw','aw'],['ng','ng','ng']],
   'had':    [['h','h...','h'],['a','ah','ah'],['d','d','d']],
   'by':     [['b','b...','b'],['y','eye','eye']],
-  'in':     [['i','ih','ih'],['n','n','n']],
   'blue':   [['bl','bl...','bl'],['ue','oo','oo']],
   'want':   [['w','w...','ww'],['a','ah','ah'],['nt','nt','nt']],
   'how':    [['h','h...','h'],['ow','ow','ow']],
   'but':    [['b','b...','b'],['u','uh','uh'],['t','t','t']],
-  'is':     [['i','ih','ih'],['s','z','z']],
-  'of':     [['o','uh','uh'],['f','v sound','v']],
   'buy':    [['b','b...','b'],['uy','eye','eye']],
   'will':   [['w','w...','ww'],['i','ih','ih'],['ll','l','l']],
   'ask':    [['a','aa','aa'],['sk','sk','sk']],
   'him':    [['h','h...','h'],['i','ih','ih'],['m','m','m']],
   'likes':  [['l','l...','lll'],['i','eye','eye'],['kes','ks','ks']],
-  'there':  [['th','th...','th'],['ere','air','air']],
   'like':   [['l','l...','lll'],['i','eye','eye'],['ke','k','k']],
   'was':    [['w','w...','ww'],['a','uh','uh'],['s','z sound','z']],
   'or':     [['or','or','or']],
@@ -958,7 +965,6 @@ const PHONICS = {
   'only':   [['on','on','on'],['ly','lee','lee']],
   'black':  [['bl','bl...','bl'],['a','ah','ah'],['ck','k','k']],
   'sleep':  [['sl','sl...','sl'],['ee','ee','ee'],['p','p','p']],
-  'we':     [['w','w...','ww'],['e','ee','ee']],
 };
 function fallbackChunks(word) {
   const vowels='aeiou', chunks=[];
